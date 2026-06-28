@@ -7,8 +7,8 @@ const nodemailer = require('nodemailer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors()); // permite que o front-end (em outro endereço) chame esse backend
-app.use(express.json()); // permite ler JSON no corpo das requisições
+app.use(cors()); 
+app.use(express.json()); 
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -18,21 +18,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Rota de teste, só pra confirmar que o servidor está no ar
 app.get('/', (req, res) => {
-  res.send('Backend do portfolio está rodando! 🚀');
+  res.send('Backend do portfolio está rodando! ');
 });
 
-// Rota que recebe os dados do formulário de contato
 app.post('/api/contact', async (req, res) => {
   const { name, email, message } = req.body;
 
-  // Validação básica no backend (nunca confie só na validação do front-end)
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'Preencha todos os campos.' });
   }
 
-  // Validação simples de formato de e-mail
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'E-mail inválido.' });
@@ -42,7 +38,7 @@ app.post('/api/contact', async (req, res) => {
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_TO,
-      replyTo: email, // assim, quando você responder, vai direto pra quem enviou
+      replyTo: email, 
       subject: `Nova mensagem do portfolio - ${name}`,
       text: `Nome: ${name}\nE-mail: ${email}\n\nMensagem:\n${message}`,
       html: `
